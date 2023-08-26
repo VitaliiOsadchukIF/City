@@ -1,25 +1,41 @@
 package org.example;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameApp {
+    private static JTextArea computerBoard;
+    private static JTextArea playerBoard;
+    private static JFrame gameFrame;
+
     public static void start() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 showInitialWindow();
             }
         });
     }
+
     private static void showInitialWindow() {
         JFrame initialFrame = new JFrame("City Game");
         initialFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        initialFrame.setSize(300, 150);
+        initialFrame.setSize(400, 200);
 
         JButton startButton = new JButton("Start Game");
         startButton.addActionListener(e -> {
-            initialFrame.dispose(); // Закрываем начальное окно
+            initialFrame.dispose();
             showGameWindow();
         });
 
@@ -32,29 +48,85 @@ public class GameApp {
     }
 
     private static void showGameWindow() {
-        JFrame gameFrame = new JFrame("City Game");
+        gameFrame = new JFrame("City Game");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gameFrame.setSize(400, 300);
+        gameFrame.setSize(600, 400);
 
-        JTextField inputField = new JTextField();
-        JTextArea computerBoard = new JTextArea();
-        JButton moveButton = new JButton("Make a move");
+        playerBoard = new JTextArea();
+        computerBoard = new JTextArea();
+        JButton moveButton = new JButton("Move");
+        JButton skipButton = new JButton("Skip");
+        JButton surrenderButton = new JButton("Surrender");
 
-        moveButton.addActionListener(e -> {
-            String input = inputField.getText().trim();
+        computerBoard.setEditable(false);
 
-            computerBoard.append("Computer's move...\n");
+        Dimension textAreaSize = new Dimension(40, 30);
+        computerBoard.setPreferredSize(textAreaSize);
+        playerBoard.setPreferredSize(textAreaSize);
 
-            inputField.setText("");
+        Font inputFont = new Font("Arial", Font.PLAIN, 14);
+        playerBoard.setFont(inputFont);
+        computerBoard.setFont(inputFont);
+
+        playerBoard.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        computerBoard.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        // Ограничение на максимальное количество символов
+        ((AbstractDocument) playerBoard.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                int currentLength = fb.getDocument().getLength();
+                int insertLength = text.length();
+                if (currentLength + insertLength <= 26) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
         });
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.add(inputField, BorderLayout.NORTH);
-        panel.add(computerBoard, BorderLayout.CENTER);
-        panel.add(moveButton, BorderLayout.SOUTH);
+        playerBoard.setColumns(20);
+        computerBoard.setColumns(20);
 
-        gameFrame.getContentPane().add(panel);
+        moveButton.addActionListener(e -> {
+          //  String input = playerBoard.getText().trim();
+            //playerBoard.append("You: " + input + "\n");
+
+          //  computerBoard.append("Computer's move...\n");
+
+            playerBoard.setText("");
+        });
+
+        skipButton.addActionListener(e -> {
+        });
+
+        surrenderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                playerBoard.setText("");
+                computerBoard.setText("");
+
+                gameFrame.dispose();
+                showInitialWindow();
+            }
+        });
+
+        JPanel topPanel = new JPanel(new GridLayout(1, 2));
+        topPanel.add(playerBoard);
+        topPanel.add(computerBoard);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 3));
+        buttonPanel.add(moveButton);
+        buttonPanel.add(skipButton);
+        buttonPanel.add(surrenderButton);
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        mainPanel.setBackground(Color.GRAY);
+
+        gameFrame.getContentPane().add(mainPanel);
         gameFrame.setVisible(true);
     }
 }
