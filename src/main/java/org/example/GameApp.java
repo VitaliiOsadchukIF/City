@@ -5,9 +5,11 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public class GameApp {
     private static JTextArea computerBoard;
@@ -15,17 +17,7 @@ public class GameApp {
     private static JFrame gameFrame;
 
     public static void start() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                showInitialWindow();
-            }
-        });
+        SwingUtilities.invokeLater(GameApp::showInitialWindow);
     }
 
     private static void showInitialWindow() {
@@ -87,27 +79,25 @@ public class GameApp {
         playerBoard.setColumns(20);
         computerBoard.setColumns(20);
 
-        moveButton.addActionListener(e -> {
-          //  String input = playerBoard.getText().trim();
-            //playerBoard.append("You: " + input + "\n");
+        moveButton.addActionListener(e -> processPlayerMove());
 
-          //  computerBoard.append("Computer's move...\n");
-
-            playerBoard.setText("");
+        playerBoard.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "enter");
+        playerBoard.getActionMap().put("enter", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                processPlayerMove();
+            }
         });
 
         skipButton.addActionListener(e -> {
         });
 
-        surrenderButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                playerBoard.setText("");
-                computerBoard.setText("");
+        surrenderButton.addActionListener(e -> {
+            playerBoard.setText("");
+            computerBoard.setText("");
 
-                gameFrame.dispose();
-                showInitialWindow();
-            }
+            gameFrame.dispose();
+            showInitialWindow();
         });
 
         JPanel topPanel = new JPanel(new GridLayout(1, 2));
@@ -129,4 +119,11 @@ public class GameApp {
         gameFrame.getContentPane().add(mainPanel);
         gameFrame.setVisible(true);
     }
+
+    private static void processPlayerMove() {
+        String input = playerBoard.getText().trim();
+        playerBoard.setText("");
+        // Тут можна додати логіку для обробки ходу гравця
+    }
+
 }
