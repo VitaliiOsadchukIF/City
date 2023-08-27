@@ -1,15 +1,14 @@
 package org.example;
 
-// import org.example.database.GsonParser;
+import org.example.database.GsonParser;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Scanner;
 
 public class Move {
 
-    private List<String> cities;
+    private ArrayList<String> cities;
     private HashSet<String> usedCities;
     private String lastCity;
     private Scanner scanner;
@@ -19,15 +18,12 @@ public class Move {
         cities = new ArrayList<String>();
         usedCities = new HashSet<String>();
         scanner = new Scanner(System.in);
-      //  GsonParser gsonParser = new GsonParser();
+        GsonParser gsonParser = new GsonParser();
+        cities.addAll(gsonParser.getCityNames());
+//        getCityNames.GsonParser;  // loadCities(); // Метод завантаження міст
     }
 
-    // private void loadCities() {
-    //        // Завантажте міста з файлу або іншого джерела тут
-    //        // cities.add("місто1");
-    //        // cities.add("місто2");
-    //        // ...
-    //    }
+
 
 
     public String playGame(String city) {
