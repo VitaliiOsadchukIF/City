@@ -123,6 +123,10 @@ public class GameApp {
     private static void processPlayerMove() {
         String input = playerBoard.getText().trim();
         playerBoard.setText("");
+
+        Move move = new Move();   // додав Віталій
+        move.playGame(input);     // додав Віталій
+
         // Тут можна додати логіку для обробки ходу гравця
     }
 

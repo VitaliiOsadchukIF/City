@@ -10,5 +10,6 @@ public class Main {
         GsonParser gsonParser = new GsonParser();
         System.out.println(gsonParser.getCityNames());
         GameApp.start();
+
     }
 }

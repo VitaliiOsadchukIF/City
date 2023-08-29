@@ -4,80 +4,56 @@ import org.example.database.GsonParser;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Scanner;
 
 public class Move {
 
-    private ArrayList<String> cities;
-    private HashSet<String> usedCities;
+    private ArrayList<String> cities;  // ідея підказує щоб доставити static
+    private HashSet<String> usedCities;  // ідея підказує щоб доставити static
     private String lastCity;
-    private Scanner scanner;
-    String input = "";
+
 
     public Move() {
-        cities = new ArrayList<String>();
-        usedCities = new HashSet<String>();
-        scanner = new Scanner(System.in);
+        cities = new ArrayList<>();
+        usedCities = new HashSet<>();
         GsonParser gsonParser = new GsonParser();
         cities.addAll(gsonParser.getCityNames());
-//        getCityNames.GsonParser;  // loadCities(); // Метод завантаження міст
+
     }
 
 
+    public void playGame(String input) {
 
+        // Хід гравця
 
-    public String playGame(String city) {
-
-        System.out.println("Welcome to the Cities Game!");
-
-        try {
-
-            while (true) {
-                // Хід гравця
-                System.out.println("Enter a city: ");
-                String playerCity = scanner.nextLine().trim();
-
-                if (!usedCities.contains(city) && city.startsWith(lastCity.substring(lastCity.length() - 1).toUpperCase())) {
-                    System.out.println("Invalid city or repeated city. Try again.");
-                    continue;
-                }
-                usedCities.add(playerCity);
-                lastCity =playerCity;
-
-                // Хід комп'ютера
-
-                String computerResponse = getComputerMove();
-
-                // Вивід відповіді комп'ютера
-                System.out.println("Computer: " + computerResponse);
-                lastCity = computerResponse;
-
-
-            }
-        } finally {
-            scanner.close();
+        if (check(input)) {
+            usedCities.add(input);
+            lastCity = input;
+        } else if (input.equals("I give up")) {
+            // повідомлення в інтерфейс про програш гравця
         }
+    }
 
+    private boolean check(String input) {
+        return !usedCities.contains(input) &&
+                input.startsWith(lastCity.substring(lastCity.length() - 1).toUpperCase());
     }
 
     public String getComputerMove() {
 
-
         String nextCity = "";
 
         for (String city : cities) {
-            if (!usedCities.contains(city) && city.startsWith(lastCity.substring(lastCity.length() - 1).toUpperCase())) {
+            if (check(city)) {
                 nextCity = city;
                 break;
             }
-
         }
         if (nextCity.isEmpty()) {
             return "Congratulations! You won! The computer can't find the next move.";
+            //повідомлення в інтерфейс про програш комп'ютера
         }
         lastCity = nextCity;
         usedCities.add(nextCity);
         return nextCity;
-
     }
 }
