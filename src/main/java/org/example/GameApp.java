@@ -12,8 +12,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class GameApp {
-    private static JTextArea computerBoard;
-    private static JTextArea playerBoard;
+    private static JTextArea computerBoard;  // поміняти текст ареа на тескт філд
+    private static JTextArea playerBoard; // поміняти текст ареа на тескт філд
     private static JFrame gameFrame;
 
     public static void start() {
@@ -90,6 +90,7 @@ public class GameApp {
         });
 
         skipButton.addActionListener(e -> {
+            // new Move().skip(computerBoard.getText()); // додав дмитро для роботи з пропуском
         });
 
         surrenderButton.addActionListener(e -> {
@@ -121,11 +122,19 @@ public class GameApp {
     }
 
     private static void processPlayerMove() {
-        String input = playerBoard.getText().trim();
+        String input = playerBoard.getText();
         playerBoard.setText("");
+
+        String str = new Winner().userHasGivenUp(input);
+        computerBoard.setText(str);
+
+
 
         Move move = new Move();   // додав Віталій
         move.playGame(input);     // додав Віталій
+
+        computerBoard.setText(move.getComputerMove());
+
 
         // Тут можна додати логіку для обробки ходу гравця
     }
