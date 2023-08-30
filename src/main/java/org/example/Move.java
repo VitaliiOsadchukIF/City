@@ -25,11 +25,13 @@ public class Move {
 
         // Хід гравця
 
-        if (check(input)) {
-            usedCities.add(input);
-            lastCity = input;
-        } else if (input.equals("I give up")) {
-            // повідомлення в інтерфейс про програш гравця
+        if (lastCity != null) {
+            if (check(input)) {
+                usedCities.add(input);
+                lastCity = input;
+            } // else if (input.equals("I give up")) {
+//            // повідомлення в інтерфейс про програш гравця
+//        }
         }
     }
 
@@ -55,5 +57,9 @@ public class Move {
         lastCity = nextCity;
         usedCities.add(nextCity);
         return nextCity;
+    }
+
+    public String skip() {
+        return getComputerMove();
     }
 }
