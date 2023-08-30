@@ -5,16 +5,15 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class GameApp {
     private static JTextArea computerBoard;
     private static JTextArea playerBoard;
     private static JFrame gameFrame;
+    private static Move move = new Move();
 
     public static void start() {
         SwingUtilities.invokeLater(GameApp::showInitialWindow);
@@ -90,6 +89,8 @@ public class GameApp {
         });
 
         skipButton.addActionListener(e -> {
+            String computerMove = move.skip();                 // додав Віталій
+            computerBoard.append(computerMove + "\n");         // додав Віталій
         });
 
         surrenderButton.addActionListener(e -> {
@@ -124,7 +125,6 @@ public class GameApp {
         String input = playerBoard.getText().trim();
         playerBoard.setText("");
 
-        Move move = new Move();   // додав Віталій
         move.playGame(input);     // додав Віталій
 
         // Тут можна додати логіку для обробки ходу гравця
