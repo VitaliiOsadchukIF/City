@@ -28,6 +28,7 @@ public class GsonParser {
 
             cities.forEach(city -> cityNames.add(city.getCity()));
 
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
