@@ -26,9 +26,8 @@ public class GsonParser {
             }.getType();
             List<City> cities = gson.fromJson(reader, type);
 
-            for (City city : cities) {
-                cityNames.add(city.getCity());
-            }
+            cities.forEach(city -> cityNames.add(city.getCity()));
+
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
